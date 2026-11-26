@@ -144,7 +144,7 @@ else
   found="$(find "$TMP/img" -name system.img -print -quit)"
   [ -n "$found" ] || die "system.img not found inside the downloaded image."
   mkdir -p "$SDK/$(dirname "$IMG_REL")"
-  rm -rf "$SDK/$IMG_REL"
+  rm -rf "${SDK:?}/${IMG_REL:?}"
   mv "$(dirname "$found")" "$SDK/$IMG_REL"
 fi
 
@@ -318,7 +318,7 @@ case "$cmd" in
     "$ADB" emu kill >/dev/null 2>&1 || true
     rm -rf "$AVD_HOME/$AVD.avd" "$AVD_HOME/$AVD.ini"
     if [ "$with_sdk" -eq 1 ]; then
-      rm -rf "$SDK/emulator" "$SDK/platform-tools" "$SDK/$IMG_REL"
+      rm -rf "$SDK/emulator" "$SDK/platform-tools" "${SDK:?}/${IMG_REL:?}"
       d="$IMG_REL"
       while [ "$d" != "." ] && [ "$d" != "/" ]; do
         d="$(dirname "$d")"
