@@ -23,7 +23,7 @@ standalone-emu install app.xapk      # also handles .xapk / .apkm / .apks bundle
 standalone-emu status                # devices + user-installed apps
 standalone-emu stop                  # clean shutdown (protects your data)
 standalone-emu shell                 # adb shell
-standalone-emu uninstall --sdk       # remove everything
+standalone-emu uninstall --sdk       # remove everything (pass -y to skip prompt)
 ```
 
 Apps and data live in the AVD and survive restarts. They are only lost if you start with `-wipe-data` or delete the AVD.
@@ -39,11 +39,23 @@ Set these before running the installer, e.g. `API_LEVEL=34 IMAGE_TYPE=google_api
 | `AVD_NAME` | `android` | Virtual device name |
 | `DATA_SIZE` | `4G` | Data partition size |
 | `RAM_MB` | `2048` | Guest RAM |
-| `ANDROID_HOME` | `~/Library/Android/sdk` | Install location |
+| `ANDROID_HOME` | `~/Library/Android/sdk` | SDK install location |
+| `ANDROID_AVD_HOME` | `~/.android/avd` | AVD storage location |
 | `BIN_DIR` | `~/.local/bin` | Where the CLI goes |
 | `FORCE` | unset | `1` skips the disk-space check |
 
-At runtime: `EMU_GPU` (default `host`; try `swiftshader_indirect` or `guest` for graphics glitches) and `EMU_SNAPSHOT=1` for fast-boot snapshots (costs 1 to 2 GB).
+At runtime:
+- `EMU_GPU` (default `host`; try `swiftshader_indirect` or `guest` for graphics glitches)
+- `EMU_SNAPSHOT=1` for fast-boot snapshots (costs 1 to 2 GB)
+- `EMU_LOG` to override the emulator log path (default `${TMPDIR:-/tmp}/standalone-emu-<AVD_NAME>.log`)
+
+## Tests
+
+The test suite mocks Google's repository manifests, `adb`, and `emulator` locally without downloading real SDK binaries:
+
+```sh
+./tests/test_install.sh
+```
 
 ## Notes
 
